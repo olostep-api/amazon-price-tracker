@@ -1,0 +1,2 @@
+"""Price tracker package."""
+
