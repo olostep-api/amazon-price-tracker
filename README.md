@@ -1,10 +1,21 @@
 # Product Price Tracker
 
-A modular price tracking app for product URLs using the OloStep scraper API.
+## Objective
+
+Build a modular product price tracking workflow that fetches product data with the Olostep scraper API, tracks price movement over time, and exposes results through CLI and Streamlit interfaces.
+
+## Prerequisites
+
+- Python 3.10 or newer
+- `pip` for installing dependencies
+- A valid `OLOSTEP_API_KEY`
+- Internet access for API calls and product URL scraping
+
+A modular price tracking app for product URLs using the Olostep scraper API.
 
 [![Parsers Documentation](assets/thumbnail.png)](https://docs.olostep.com/features/structured-content/parsers)
 
-Learn more about parsers here: [OloStep Parsers Documentation](https://docs.olostep.com/features/structured-content/parsers).
+Learn more about parsers here: [Olostep Parsers Documentation](https://docs.olostep.com/features/structured-content/parsers).
 
 It includes:
 - A Streamlit dashboard (`app.py`)
@@ -17,6 +28,8 @@ It includes:
 
 ## Quick Links
 
+- [Objective](#objective)
+- [Prerequisites](#prerequisites)
 - [Features](#features)
 - [Project Structure](#project-structure)
 - [Setup](#setup)
