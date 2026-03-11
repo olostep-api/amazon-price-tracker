@@ -1,134 +1,69 @@
-# Product Price Tracker
+# Amazon Product Price Tracker (Python + Streamlit + Olostep API)
 
-## Objective
+Track Amazon product prices with a lightweight Python workflow that scrapes product data via the **Olostep API**, stores history in **CSV + JSON**, and provides both a **Streamlit dashboard** and **CLI runners** for manual and scheduled checks.
 
-Build a modular product price tracking workflow that fetches product data with the Olostep scraper API, tracks price movement over time, and exposes results through CLI and Streamlit interfaces.
+![Amazon Product Price Tracker Streamlit Dashboard](assets/ui.png)
 
-## Prerequisites
+## Why This Project
 
-- Python 3.10 or newer
-- `pip` for installing dependencies
-- A valid `OLOSTEP_API_KEY`
-- Internet access for API calls and product URL scraping
-
-A modular price tracking app for product URLs using the Olostep scraper API.
-
-[![Parsers Documentation](assets/thumbnail.png)](https://docs.olostep.com/features/structured-content/parsers)
-
-Learn more about parsers here: [Olostep Parsers Documentation](https://docs.olostep.com/features/structured-content/parsers).
-
-It includes:
-- A Streamlit dashboard (`app.py`)
-- A one-shot CLI runner (`run_tracker.py`)
-- A scheduled runner (`run_scheduler.py`)
-- A modular codebase under `src/`
-- Persistent outputs under `output/`
-
----
-
-## Quick Links
-
-- [Objective](#objective)
-- [Prerequisites](#prerequisites)
-- [Features](#features)
-- [Project Structure](#project-structure)
-- [Setup](#setup)
-- [Parsers Documentation](https://docs.olostep.com/features/structured-content/parsers)
-- [Run Streamlit App](#run-streamlit-app)
-- [Run CLI Tracker](#run-cli-tracker)
-- [Run Scheduler](#run-scheduler)
-- [Outputs](#outputs)
-
----
+This project helps you:
+- monitor Amazon product price changes over time
+- compare current vs previous prices (`higher`, `lower`, `same`, `new`, `unknown`)
+- run one-off checks from terminal or recurring checks on a schedule
+- view a compact web dashboard for URL management, tracking controls, and filtered product data
 
 ## Features
 
-- Scrapes product details from URLs in `data/product_urls.txt`
-- Tracks latest price and previous price
-- Detects price movement:
-  - `higher`
-  - `lower`
-  - `same`
-  - `new` / `unknown`
-- Maintains CSV snapshot with product metadata
-- Maintains JSON price history with fetch timestamps
-- Computes average product price from JSON history
-- Streamlit UI supports:
-  - Add/Edit/Remove URLs
-  - Manual tracking runs
-  - Scheduler start/stop/status
-  - Live metrics and product table
+- Streamlit dashboard (`app.py`)
+  - add/edit/remove tracked URLs
+  - run tracking manually
+  - start/stop scheduler and view scheduler status
+  - filter tracked products by title/URL and price direction
+- CLI one-shot runner (`run_tracker.py`)
+- CLI scheduler runner (`run_scheduler.py`)
+- Auto-aligned CSV schema
+- JSON history with average price and sample count
 
----
+## Prerequisites
 
-## Project Structure
+- Python 3.10+
+- `pip`
+- Valid `OLOSTEP_API_KEY`
+- Internet access for API requests
 
-```text
-.
-├── app.py
-├── run_tracker.py
-├── run_scheduler.py
-├── assets/
-│   └── thumbnail.png
-├── data/
-│   └── product_urls.txt
-├── output/
-│   ├── price_tracker_history.csv
-│   └── product_price_history.json
-└── src/
-    └── tracker/
-        ├── constants.py
-        ├── csv_store.py
-        ├── json_history.py
-        ├── normalizer.py
-        ├── olostep_client.py
-        ├── scheduler.py
-        ├── service.py
-        ├── url_loader.py
-        └── utils.py
-```
+## Quick Start
 
----
-
-## Setup
-
-### 1. Install dependencies
+### 1) Install dependencies
 
 ```bash
 pip install requests python-dotenv streamlit
 ```
 
-### 2. Configure environment
+### 2) Configure environment
 
-Create/update `.env`:
+Create `.env`:
 
 ```env
 OLOSTEP_API_KEY=your_api_key_here
 ```
 
-### 3. Add product URLs
+### 3) Add product URLs
 
-Put one URL per line in `data/product_urls.txt`.
+Add one URL per line in:
 
----
+```text
+data/product_urls.txt
+```
 
-## Run Streamlit App
+## Run the App
+
+### Streamlit dashboard
 
 ```bash
 streamlit run app.py
 ```
 
-In the app you can:
-- Manage URLs (JSON view + add/edit/remove)
-- Run tracking immediately
-- Start/stop scheduler
-- View tracked product table with average price from JSON
-
----
-
-## Run CLI Tracker
-
-One-time tracking run:
+### CLI one-time tracking
 
 ```bash
 python run_tracker.py
@@ -144,11 +79,7 @@ python run_tracker.py \
   --sleep 2
 ```
 
----
-
-## Run Scheduler
-
-Run periodic comparisons from terminal:
+### CLI scheduled tracking
 
 ```bash
 python run_scheduler.py --interval-minutes 30
@@ -165,44 +96,42 @@ python run_scheduler.py \
   --sleep 2
 ```
 
----
-
-## Outputs
+## Output Files
 
 All outputs are written to `output/` by default.
 
-### 1) CSV: `output/price_tracker_history.csv`
+| File | Purpose |
+|---|---|
+| `output/price_tracker_history.csv` | Latest product snapshot including current/previous price and change direction |
+| `output/product_price_history.json` | Per-product historical timeline with computed average price |
 
-Contains latest tracked snapshot per product, including:
-- `source_url`
-- `scrape_status`
-- `title`
-- `price`
-- `previous_price`
-- `price_change`
-- `price_change_direction`
-- `currency`
-- `review_stars`
-- `number_reviews`
-- `is_available`
-- `seller_name`
-- `seller_type`
-- `image_url`
-- `last_checked_at`
+## Project Structure
 
-### 2) JSON History: `output/product_price_history.json`
-
-Stores per-product timeline:
-- Product metadata
-- `price_history` list of `{ fetched_at, price }`
-- Computed `average_price`
-- Last seen price + timestamp
-
----
+```text
+.
+├── app.py
+├── run_tracker.py
+├── run_scheduler.py
+├── assets/
+│   ├── ui.png
+│   └── thumbnail.png
+├── data/
+│   └── product_urls.txt
+├── output/
+│   ├── price_tracker_history.csv
+│   └── product_price_history.json
+└── src/
+    └── tracker/
+```
 
 ## Notes
 
 - If CSV schema changes, it is auto-aligned by the app.
 - New products are appended.
 - Existing products are updated on successful scrapes.
-- For successful updates, old `price` is shifted to `previous_price`.
+- On successful updates, old `price` is shifted to `previous_price`.
+
+## Olostep Parser Reference
+
+- [Olostep Parsers Documentation](https://docs.olostep.com/features/structured-content/parsers)
+- [Parser preview image](assets/thumbnail.png)
