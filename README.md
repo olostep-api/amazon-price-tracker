@@ -1,24 +1,24 @@
 # Amazon Product Price Tracker (Python + Streamlit + Olostep API)
 
-Track Amazon product prices with a lightweight Python workflow that scrapes product data via the **Olostep API**, stores history in **CSV + JSON**, and provides both a **Streamlit dashboard** and **CLI runners** for manual and scheduled checks.
+Track [Amazon](https://www.amazon.com/) product prices with a lightweight Python workflow that scrapes product data via the [Olostep API](https://www.olostep.com/), stores history in **CSV + JSON**, and provides both a **Streamlit dashboard** and **CLI runners** for manual and scheduled checks.
 
 ![Amazon Product Price Tracker Streamlit Dashboard](assets/ui.png)
 
 ## Why This Project
 
 This project helps you:
-- monitor Amazon product price changes over time
-- compare current vs previous prices (`higher`, `lower`, `same`, `new`, `unknown`)
-- run one-off checks from terminal or recurring checks on a schedule
-- view a compact web dashboard for URL management, tracking controls, and filtered product data
+- Monitor Amazon product price changes over time.
+- Compare current vs previous prices (`higher`, `lower`, `same`, `new`, `unknown`).
+- Run one-off checks from terminal or recurring checks on a schedule.
+- View a compact web dashboard for URL management, tracking controls, and filtered product data.
 
 ## Features
 
 - Streamlit dashboard (`app.py`)
-  - add/edit/remove tracked URLs
-  - run tracking manually
-  - start/stop scheduler and view scheduler status
-  - filter tracked products by title/URL and price direction
+  - Add, edit, and remove tracked URLs.
+  - Run tracking manually.
+  - Start or stop the scheduler and view scheduler status.
+  - Filter tracked products by title/URL and price direction.
 - CLI one-shot runner (`run_tracker.py`)
 - CLI scheduler runner (`run_scheduler.py`)
 - Auto-aligned CSV schema
@@ -47,6 +47,8 @@ Create `.env`:
 OLOSTEP_API_KEY=your_api_key_here
 ```
 
+Create an API key from the [Olostep API Keys dashboard](https://www.olostep.com/dashboard/api-keys), then place it in `.env`.
+
 ### 3) Add product URLs
 
 Add one URL per line in:
@@ -54,7 +56,6 @@ Add one URL per line in:
 ```text
 data/product_urls.txt
 ```
-
 ## Run the App
 
 ### Streamlit dashboard
@@ -109,19 +110,28 @@ All outputs are written to `output/` by default.
 
 ```text
 .
-├── app.py
-├── run_tracker.py
-├── run_scheduler.py
+├── app.py                         # Streamlit dashboard entrypoint
+├── run_tracker.py                 # CLI one-time tracking runner
+├── run_scheduler.py               # CLI scheduled tracking runner
 ├── assets/
-│   ├── ui.png
-│   └── thumbnail.png
+│   ├── ui.png                     # Dashboard screenshot
+│   └── thumbnail.png              # Parser preview image
 ├── data/
-│   └── product_urls.txt
+│   └── product_urls.txt           # Input URLs (one per line)
 ├── output/
-│   ├── price_tracker_history.csv
-│   └── product_price_history.json
+│   ├── price_tracker_history.csv  # Latest snapshot rows
+│   └── product_price_history.json # Per-product historical timeline
 └── src/
     └── tracker/
+        ├── constants.py           # Defaults and shared constants
+        ├── csv_store.py           # CSV read/write and schema alignment
+        ├── json_history.py        # JSON history persistence
+        ├── normalizer.py          # Price and payload normalization
+        ├── olostep_client.py      # Olostep request client
+        ├── scheduler.py           # Scheduling loop logic
+        ├── service.py             # Core tracking orchestration
+        ├── url_loader.py          # URL loading and validation
+        └── utils.py               # Shared helper utilities
 ```
 
 ## Notes
@@ -134,4 +144,5 @@ All outputs are written to `output/` by default.
 ## Olostep Parser Reference
 
 - [Olostep Parsers Documentation](https://docs.olostep.com/features/structured-content/parsers)
+- [Olostep Authentication Guide](https://docs.olostep.com/get-started/authentication)
 - [Parser preview image](assets/thumbnail.png)
